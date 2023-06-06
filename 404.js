@@ -1,4 +1,5 @@
 let user = undefined;
+let colors = new Map();
 let clickCounter = 0;
 let timeoutId = undefined;
 
@@ -37,8 +38,12 @@ function verifyPassword() {
         verifyPasswordRequest.addEventListener('load', (event) => {
             const verifyPasswordResponse = JSON.parse(event.target.response);
     
-            if (typeof verifyPasswordResponse === 'string') {
-                user = verifyPasswordResponse;
+            if (verifyPasswordResponse !== false) {
+                user = verifyPasswordResponse.user;
+                verifyPasswordResponse.colors.forEach(colorObject => {
+                    colors.set(colorObject.username, colorObject.color);
+                });
+
                 document.removeEventListener('keyup', verifyPassword);
 
                 const revealWebsiteRequest = new XMLHttpRequest();
